@@ -24,6 +24,9 @@ class Domain:
             print('[INFO]Le domaine "{}" n\'est pas à jour'.format(self.domain))
             self.update_dynhost()
             self.notification()
+        else:
+            print('[INFO]Le domaine "{}" est à jour'.format(self.domain))
+
 
     def update_dynhost(self):
         """Update online the DNS"""
@@ -40,6 +43,7 @@ class Domain:
             print('[ERROR]Identification incorrecte')
         else:
             print('[ERROR]Erreur inconnue')
+        print("Réponse : {}".format(req.text));
 
     def notification(self):
         """Send an email to me to notifiate that the domain had changed IP"""
