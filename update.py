@@ -5,7 +5,6 @@ import json
 import socket
 import requests
 
-
 class Domain:
     """Domain object"""
 
@@ -22,16 +21,12 @@ class Domain:
         if self.server_ip != self.device_ip:
             print()
             print('[INFO]Le domaine "{}" n\'est pas à jour'.format(self.domain))
-            self.update_dynhost()
-            self.notification()
+            self.update_dynhost(device_ip)
         else:
             print('[INFO]Le domaine "{}" est à jour'.format(self.domain))
 
-
-    def update_dynhost(self):
+    def update_dynhost(self, device_ip):
         """Update online the DNS"""
-        # TEMP: is temp
-        device_ip = '90.22.66.151'
         print('[INFO]IP actuelle : {}'.format(self.server_ip))
         print('[INFO]IP nouvelle : {}'.format(self.device_ip))
         print('[INFO]Mise à jour en cours...')
@@ -44,40 +39,6 @@ class Domain:
         else:
             print('[ERROR]Erreur inconnue')
         print("Réponse : {}".format(req.text));
-
-    def notification(self):
-        """Send an email to me to notifiate that the domain had changed IP"""
-        print('[INFO]Envoie du mail de notification en cours...')
-        import smtplib
-
-        try:
-            subject = 'Notification system : DNS updated !'
-            toaddrs = [TO]
-            message = """
-Le domaine {} a changé d'adresse !
-Ancienne adresse : {}
-Nouvelle adresse : {}
-            """.format(self.domain, self.server_ip, self.device_ip)
-            msg = """\
-From: %s\r\n\
-To: %s\r\n\
-Subject: %s\r\n\
-\r\n\
-%s
-            """ % (FROM, ", ".join(toaddrs), subject, message)
-
-            server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-            server.starttls()
-            server.login(FROM, PASSWORD)
-            server.sendmail(FROM, TO, msg.encode())
-            server.quit()
-        except smtplib.SMTPAuthenticationError as error:
-            print("[ERROR]Bad authentification : " + str(error))
-        except Exception as error:
-            print('[ERROR]Unknow : ' + str(error))
-        else:
-            print("[SUCCESS]Le mail a bien été envoyé !")
-
 
 class App:
     """Classe principale de mon application"""
@@ -107,10 +68,5 @@ class App:
 
 #CONFIG
 URL_UPDATE = 'http://www.ovh.com/nic/update?system=dyndns&hostname={}&myip={}'
-FROM = "jean.dupont@exemple.fr"
-PASSWORD = "password"
-SMTP_SERVER = "smtp.exemple.fr"
-SMTP_PORT = 587
-TO = "you@exemple.fr"
 
 App()
