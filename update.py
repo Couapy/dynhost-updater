@@ -38,7 +38,6 @@ class Domain:
             print('[ERROR]Identification incorrecte')
         else:
             print('[ERROR]Erreur inconnue')
-        print("Réponse : {}".format(req.text));
 
 class App:
     """Classe principale de mon application"""
