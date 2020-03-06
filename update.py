@@ -4,6 +4,7 @@ Dynhost updater
 import json
 import socket
 import requests
+import configparser
 
 class Domain:
     """Domain object"""
@@ -17,10 +18,18 @@ class Domain:
     def update(self, device_ip):
         """Update the dynhost of the domain"""
         self.device_ip = device_ip
-        self.server_ip = socket.gethostbyname(self.domain)
-        if self.server_ip != self.device_ip:
+        error = False
+        try:
+            req = resquets.get(URL_UPDATE_IP)
+            self.server_ip = req.text
+        except Exception as e:
+            error = True
+
+        if error:
+            print('[ERROR]Impossible de récupérer l\'adresse ip du serveur')
+        elif self.server_ip != self.device_ip:
             print()
-            print('[INFO]Le domaine "{}" n\'est pas à jour'.format(self.domain))
+            print('[WARN]Le domaine "{}" n\'est pas à jour'.format(self.domain))
             self.update_dynhost(device_ip)
         else:
             print('[INFO]Le domaine "{}" est à jour'.format(self.domain))
@@ -39,33 +48,27 @@ class Domain:
         else:
             print('[ERROR]Erreur inconnue')
 
-class App:
-    """Classe principale de mon application"""
 
-    def __init__(self):
-        self.domains = []
-        self.device_ip = ''
-        self.update_current_ip()
-        self.set_domains()
-        self.run()
-
-    def update_current_ip(self):
-        """Update the current IP"""
-        req = requests.get('http://ifconfig.co/json')
-        response = json.loads(req.text)
-        self.device_ip = response['ip']
-
-    def set_domains(self):
-        """Create array of domain objects"""
-        # self.domains.append(Domain('domain', 'user', 'password'))
-
-    def run(self):
-        """Core application"""
-        print("[INFO]Application starting", end="\n")
-        for domain in self.domains:
-            domain.update(self.device_ip)
-
-#CONFIG
+# CONFIG
 URL_UPDATE = 'http://www.ovh.com/nic/update?system=dyndns&hostname={}&myip={}'
+URL_UPDATE_IP = 'https://ifconfig.me/ip'
 
-App()
+# Config parser
+config = configparser.ConfigParser()
+config.read('sites.conf')
+
+# App
+domains = []
+device_ip = ''
+
+# Update device ip
+req = requests.get('http://ifconfig.co/json')
+response = json.loads(req.text)
+device_ip = response['ip']
+
+for domain in config.sections():
+    domains.append(Domain(domain, config[domain]['user'], config[domain]['password']))
+
+print("[INFO]Application starting", end="\n")
+for domain in domains:
+    domain.update(device_ip)
