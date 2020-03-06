@@ -16,7 +16,7 @@ class Domain:
 
     def update(self, device_ip):
         """Update online the DNS"""
-        print('[INFO]IP : {}'.format(self.device_ip))
+        print('[INFO]IP : {}'.format(device_ip))
         print('[INFO]Mise à jour en cours...')
         req = requests.get(URL_UPDATE.format(
             self.domain, device_ip), auth=self.auth)
@@ -30,6 +30,7 @@ class Domain:
 
 # CONFIG
 URL_UPDATE = 'http://www.ovh.com/nic/update?system=dyndns&hostname={}&myip={}'
+URL_UPDATE_IP = 'https://ifconfig.me/ip'
 
 # Config parser
 config = configparser.ConfigParser()
@@ -40,7 +41,7 @@ domains = []
 device_ip = ''
 
 # Update device ip
-req = requests.get('http://ifconfig.co/ip')
+req = requests.get(URL_UPDATE_IP)
 device_ip = req.text
 
 for domain in config.sections():
