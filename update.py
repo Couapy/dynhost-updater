@@ -20,7 +20,7 @@ class Domain:
         self.device_ip = device_ip
         error = False
         try:
-            req = resquets.get(URL_UPDATE_IP)
+            req = resquests.get(URL_UPDATE_IP)
             self.server_ip = req.text
         except Exception as e:
             error = True
