@@ -3,8 +3,11 @@ Dynhost updater
 """
 import json
 import socket
+from configparser import ConfigParser
+from datetime import datetime
+
 import requests
-import configparser
+
 
 class Domain:
     """Domain object"""
@@ -16,8 +19,10 @@ class Domain:
 
     def update(self, device_ip):
         """Update online the DNS"""
-        print('[INFO]IP : {}'.format(device_ip))
-        print('[INFO]Mise à jour en cours...')
+        print('[DOMAIN] ' + self.domain)
+        print('[DATE] ' + str(datetime.now()))
+        print('[INFO] IP : {}'.format(device_ip))
+        print('[INFO] Mise à jour en cours...')
         req = requests.get(URL_UPDATE.format(
             self.domain, device_ip), auth=self.auth)
         if req.status_code == 200:
@@ -33,7 +38,7 @@ URL_UPDATE = 'http://www.ovh.com/nic/update?system=dyndns&hostname={}&myip={}'
 URL_UPDATE_IP = 'https://ifconfig.me/ip'
 
 # Config parser
-config = configparser.ConfigParser()
+config = ConfigParser()
 config.read('sites.conf')
 
 # App
@@ -47,6 +52,5 @@ device_ip = req.text
 for domain in config.sections():
     domains.append(Domain(domain, config[domain]['user'], config[domain]['password']))
 
-print("[INFO]Application starting", end="\n")
 for domain in domains:
     domain.update(device_ip)
