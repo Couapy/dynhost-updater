@@ -2,6 +2,7 @@
 Dynhost updater
 """
 import json
+import os
 import socket
 from configparser import ConfigParser
 from datetime import datetime
@@ -36,8 +37,9 @@ URL_UPDATE = 'http://www.ovh.com/nic/update?system=dyndns&hostname={}&myip={}'
 URL_UPDATE_IP = 'https://ifconfig.me/ip'
 
 # Config parser
+directory = os.path.dirname(__file__)
 config = ConfigParser()
-config.read('sites.conf')
+config.read(directory + '/sites.conf')
 
 # App
 domains = []
