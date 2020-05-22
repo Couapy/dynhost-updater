@@ -20,15 +20,15 @@ class Domain:
     def update(self, device_ip):
         """Update online the DNS"""
         print('[DOMAIN] ' + self.domain)
-        print('[INFO] IP : {}'.format(device_ip))
+        print('  [INFO] IP : {}'.format(device_ip))
         req = requests.get(URL_UPDATE.format(
             self.domain, device_ip), auth=self.auth)
         if req.status_code == 200:
-            print('[SUCCESS] IP update successfull')
+            print('  [SUCCESS] IP update successfull')
         elif req.status_code == 401:
-            print('[ERROR] Wrong credentials')
+            print('  [ERROR] Wrong credentials')
         else:
-            print('[ERROR] Unexpected error')
+            print('  [ERROR] Unexpected error')
 
 
 # CONFIG
