@@ -20,17 +20,15 @@ class Domain:
     def update(self, device_ip):
         """Update online the DNS"""
         print('[DOMAIN] ' + self.domain)
-        print('[DATE] ' + str(datetime.now()))
         print('[INFO] IP : {}'.format(device_ip))
-        print('[INFO] Mise à jour en cours...')
         req = requests.get(URL_UPDATE.format(
             self.domain, device_ip), auth=self.auth)
         if req.status_code == 200:
-            print('[SUCCESS]Mise à jour réussie')
+            print('[SUCCESS] IP update successfull')
         elif req.status_code == 401:
-            print('[ERROR]Identification incorrecte')
+            print('[ERROR] Wrong credentials')
         else:
-            print('[ERROR]Erreur inconnue')
+            print('[ERROR] Unexpected error')
 
 
 # CONFIG
@@ -52,5 +50,6 @@ device_ip = req.text
 for domain in config.sections():
     domains.append(Domain(domain, config[domain]['user'], config[domain]['password']))
 
+print('[DATE] ' + str(datetime.now()))
 for domain in domains:
     domain.update(device_ip)
