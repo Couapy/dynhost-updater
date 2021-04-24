@@ -6,7 +6,7 @@ from configparser import ConfigParser
 import dns.resolver
 import requests
 
-SITES_CONFIG = 'config/sites.ini'
+SITES_CONFIG = 'config/sites.cfg'
 URI_UPDATE = 'http://www.ovh.com/nic/update?system=dyndns&hostname=%(hostname)s&myip=%(ip)s'
 URI_GET_IP = 'https://ifconfig.me/ip'
 DNS_RESOLVERS = ['8.8.8.8']

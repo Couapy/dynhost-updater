@@ -1,18 +1,44 @@
-# DynHostUpdater
+# dynhost-updater
 
-Allow you to update your dynhost domains with CRON
+[![MIT License](https://img.shields.io/badge/license-MIT-yellow.svg)](https://github.com/5kyc0d3r/upnpy/blob/master/LICENSE)
+[![MIT License](https://img.shields.io/badge/python-3-brightgreen)](https://github.com/Couapy/DynHostUpdater/)
 
-## Installation
+This is a tool that allow you to update DynHost (ovh technology) fields automatically.
 
-Please run the following command to get all dependencies :
+## How to execute ?
 
-> pip install -r requirements.txt
+The recommanded way to execute this tool is docker.
+
+### With Docker
+
+This tool can be executed in a container with docker :
+
+```bash
+docker build -t dynhostupdater .
+docker run dynhostupdater -d
+```
+
+### Locally
+
+Please run the following command
+
+```
+pip install virtualenv
+virtualenv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# To execute the script once:
+python main.py
+```
+
+To execute automatically the script, you can use the `config/con.conf` cron file. 
 
 ## Configuration
 
-Create a *sites.conf*
+The configuration is stored in the `config/sites.cfg` file.
 
-And write the folling lines to add a domain :
+For example, the script will update **mysite.com** with the user `myuser` and password `mypassword`:
 
 ```ini
 [mysite.com]
@@ -20,10 +46,4 @@ user=mysuser
 password=mypassword
 ```
 
-If you want to add a new domain to update, you can paste a new section.
-
-## Install CRON service
-
-> sudo touch /var/log/DynDNSUpdate.log
-
-`*/15 *  * * *   root    /bin/python3 /path/to/your/update.py >> /var/log/DynDNSUpdate.log`
+If you want more domains, just create new sections.
