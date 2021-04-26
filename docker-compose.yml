@@ -2,10 +2,10 @@ version: "3.9"
 
 services:
     dynhost:
-        image: .
-        command: cron -f
+        build: .
+        command: "cron -f"
         volumes:
-            - logs:/app/logs
+            - ./logs:/app/logs
 
 volumes:
     logs:

@@ -50,7 +50,7 @@ class Domain:
             self.logger.info('Successfully updated from %s to %s.' %
                              (self.old_ip, current_ip))
         elif req.status_code == 401:
-            self.logger.error('Failed to update DNS. Wrong credentials.')
+            self.logger.error('Failed to update DNS. Bad credentials.')
         else:
             self.logger.error(
                 'Failed to update DNS. Unexpected error happened.')
