@@ -1,10 +1,8 @@
 FROM python:3.9
 
-# Install CRON
-RUN apt-get -qq update && apt-get install -yqq cron
-COPY config/cron.conf /etc/cron.d/dynhostupdater
-RUN chmod +x /etc/cron.d/dynhostupdater
-RUN crontab /etc/cron.d/dynhostupdater
+# Configure locale (log date & time)
+ENV TZ=Europe/Paris
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install application
 WORKDIR /app

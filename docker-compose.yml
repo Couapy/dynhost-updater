@@ -3,7 +3,7 @@ version: "3.9"
 services:
     dynhost:
         build: .
-        command: "cron -f"
+        command: "python3 /app/main.py"
         volumes:
             - ./logs:/app/logs
 

@@ -14,8 +14,7 @@ The recommanded way to execute this tool is docker.
 This tool can be executed in a container with docker :
 
 ```bash
-docker build -t dynhostupdater .
-docker run dynhostupdater -d
+docker-compose up -d
 ```
 
 ### Locally
@@ -29,7 +28,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # To execute the script once:
-python main.py
+python3 main.py
 ```
 
 To execute automatically the script, you can use the `config/con.conf` cron file. 

@@ -1,6 +1,8 @@
 import logging
 import os
+import signal
 import sys
+import time
 from configparser import ConfigParser
 
 import dns.resolver
@@ -10,6 +12,7 @@ SITES_CONFIG = 'config/sites.cfg'
 URI_UPDATE = 'http://www.ovh.com/nic/update?system=dyndns&hostname=%(hostname)s&myip=%(ip)s'
 URI_GET_IP = 'https://ifconfig.me/ip'
 DNS_RESOLVERS = ['8.8.8.8']
+UPDATE_INTERVAL = 60 * 10 # Seconds
 
 
 class Domain:
@@ -62,6 +65,12 @@ def get_current_ip() -> str:
     return req.text
 
 
+def signal_handler(signum: int, frame):
+    print(end="\r")
+    logging.info("stopped")
+    sys.exit(0)
+
+
 def main():
     """Configure logs, and update the domains configured in SITES_CONFIG file."""
     os.makedirs('logs', exist_ok=True)
@@ -80,15 +89,21 @@ def main():
     config = ConfigParser()
     config.read(os.path.join(SITES_CONFIG))
 
-    current_ip = get_current_ip()
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    logging.info("started")
 
-    for section in config.sections():
-        domain = Domain(
-            domain=section,
-            user=config.get(section, 'user'),
-            password=config.get(section, 'password'),
-        )
-        domain.update(current_ip)
+    while True:
+        current_ip = get_current_ip()
+
+        for section in config.sections():
+            domain = Domain(
+                domain=section,
+                user=config.get(section, 'user'),
+                password=config.get(section, 'password'),
+            )
+            domain.update(current_ip)
+        time.sleep(UPDATE_INTERVAL)
 
 
 if __name__ == '__main__':
